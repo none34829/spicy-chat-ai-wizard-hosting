@@ -1,7 +1,7 @@
 {
   "name": "spicy-chat-ai-wizard-hosting-backend",
   "version": "1.0.0",
-  "type": "module",
+  "type": "commonjs",
   "description": "Backend for SpicyChat AI Wizard Hosting",
   "main": "dist/index.js",
   "scripts": {
