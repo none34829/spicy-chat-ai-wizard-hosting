@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 import { CharacterData } from '../../types';
+import { fetchFromApi } from '../../utils/api';
 
 interface CharacterFormProps {
   onGenerate: (character: CharacterData) => void;
@@ -59,13 +60,12 @@ export default function CharacterForm({ onGenerate, setIsGenerating, setError, c
     setError('');
     
     try {
-      const response = await fetch('http://localhost:3001/api/character/generate', {
+      const response = await fetchFromApi('/character/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        credentials: 'include',
         body: JSON.stringify({
           description,
           relationship,
