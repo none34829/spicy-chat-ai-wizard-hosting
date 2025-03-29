@@ -1,10 +1,6 @@
-// frontend/utils/api.ts
-const isDevelopment = window.location.hostname === 'localhost' || 
-                     window.location.hostname === '127.0.0.1';
-
-const API_BASE_URL = isDevelopment
-  ? 'http://localhost:3001/api' 
-  : '/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 
+  (window.location.hostname === 'localhost' ? 'http://localhost:3001/api' 
+  : 'https://spicy-chat-ai-wizard-hosting-production.up.railway.app/api');
 
 export const fetchFromApi = async (endpoint: string, options = {}) => {
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
