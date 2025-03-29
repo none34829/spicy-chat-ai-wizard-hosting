@@ -1,3 +1,4 @@
+// vite.config.ts
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -18,12 +19,12 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         ws: true,
-        rewrite: (path) => path.replace(/^\/api/, '/api') // Keep the /api prefix
+        rewrite: (path) => path.replace(/^\/api/, '/api')
       }
     }
   },
   build: {
-    outDir: '../dist',
+    outDir: 'dist', // Changed from '../dist' to 'dist'
     emptyOutDir: true,
     rollupOptions: {
       input: {
