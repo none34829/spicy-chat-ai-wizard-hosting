@@ -17,6 +17,7 @@ export const fetchFromApi = async (
     },
     // Remove credentials for cross-origin requests
     credentials: window.location.hostname.includes('localhost') ? 'include' : 'omit',
+    mode: 'cors'
   });
   
   try {

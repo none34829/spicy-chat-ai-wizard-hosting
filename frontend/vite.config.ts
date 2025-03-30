@@ -38,7 +38,7 @@ export default defineConfig({
     }
   },
   define: {
-    'process.env.VITE_API_URL': JSON.stringify('https://spicy-chat-ai-wizard-hosting-production.up.railway.app')
+    'process.env.VITE_API_URL': JSON.stringify('https://spicy-chat-ai-wizard-hosting-production.up.railway.app/api')
   },
   root: './'
 });
