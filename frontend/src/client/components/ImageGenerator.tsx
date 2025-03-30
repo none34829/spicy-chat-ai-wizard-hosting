@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 import { CharacterData } from '../../types';
+import { fetchFromApi } from '../../utils/api';
 
 interface ImageGeneratorProps {
   character: CharacterData;
@@ -46,11 +47,8 @@ export default function ImageGenerator({
         throw new Error('Please enter a custom style description');
       }
       
-      const response = await fetch('/api/image/generate', {
+      const result = await fetchFromApi('/image/generate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify({
           characterData: {
             name: character.name,
@@ -62,9 +60,7 @@ export default function ImageGenerator({
         }),
       });
       
-      const result = await response.json();
-      
-      if (!response.ok) {
+      if (result.status === 'error') {
         throw new Error(result.message || 'Failed to generate image');
       }
       
@@ -198,20 +194,19 @@ export default function ImageGenerator({
           disabled={isLoading}
         />
         <p className="help-text">
-          These details will help create a more accurate image of your character.
+          These details will help create a more accurate representation of your character.
         </p>
       </div>
-      
+
       <div className="flex justify-center">
         <button
-          type="button"
           onClick={handleGenerateImage}
-          disabled={isLoading || (!selectedStyle.trim() && !customStyle.trim())}
+          disabled={isLoading || (selectedStyle === 'other' && !customStyle.trim())}
           className="btn btn-primary btn-lg"
         >
           {isLoading ? (
             <>
-              <div className="loader"></div>
+              <LoadingSpinner />
               <span>Generating Image...</span>
             </>
           ) : (
