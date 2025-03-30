@@ -60,12 +60,10 @@ export default function CharacterForm({ onGenerate, setIsGenerating, setError, c
     setError('');
     
     try {
+      console.log("Sending character data:", { description, relationship, url: url.trim() || undefined });
+      
       const result = await fetchFromApi('/character/generate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
         body: JSON.stringify({
           description,
           relationship,
@@ -73,10 +71,11 @@ export default function CharacterForm({ onGenerate, setIsGenerating, setError, c
         }),
       });
       
+      console.log("Character generation result:", result);
+      
       if (result.status === 'error') {
         throw new Error(result.message || 'Failed to generate character');
       }
-
       if (result.status === 'success' && result.data) {
         onGenerate(result.data);
       } else {
