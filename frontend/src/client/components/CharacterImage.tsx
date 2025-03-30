@@ -37,7 +37,8 @@ export default function CharacterImage({ imageUrl, characterName, style }: Chara
         
         {imageError ? (
           <div className="p-4 bg-red-50 text-red-700 rounded-md">
-            Failed to load image. The URL might be invalid or the image is not accessible.
+            <p className="font-semibold">Failed to load image.</p>
+            <p className="text-sm mt-1">The image URL might be invalid or the server might be blocking cross-origin requests.</p>
             <div className="mt-2 text-xs text-gray-500 break-all">
               URL: {imageUrl}
             </div>
@@ -49,12 +50,14 @@ export default function CharacterImage({ imageUrl, characterName, style }: Chara
             alt={`${characterName} - ${style}`}
             className="max-w-full h-auto rounded-lg shadow-lg"
             style={{ maxHeight: '512px' }}
+            crossOrigin="anonymous"
             onLoad={() => {
               console.log('Image loaded successfully:', imageUrl);
               setIsLoading(false);
             }}
             onError={(e) => {
               console.error('Image failed to load:', imageUrl);
+              console.error('Error event:', e);
               setImageError(true);
               setIsLoading(false);
             }}

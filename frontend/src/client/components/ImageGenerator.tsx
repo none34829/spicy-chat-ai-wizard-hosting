@@ -66,12 +66,18 @@ export default function ImageGenerator({
       console.log('Raw API response:', result);
       console.log('Response type:', typeof result);
       console.log('Response keys:', Object.keys(result));
+      console.log('Response stringify:', JSON.stringify(result, null, 2));
       console.log('Result status:', result.status);
       
       if (result.data) {
         console.log('Result data:', result.data);
         console.log('Result data type:', typeof result.data);
         console.log('Result data keys:', Object.keys(result.data));
+        
+        if (result.data.imageUrl) {
+          console.log('Image URL from response:', result.data.imageUrl);
+          console.log('Image URL type:', typeof result.data.imageUrl);
+        }
       }
       
       if (result.status === 'error') {
@@ -85,6 +91,8 @@ export default function ImageGenerator({
 
       const imageUrl = result.data.imageUrl;
       console.log('Setting image URL:', imageUrl);
+      console.log('Image URL length:', imageUrl.length);
+      console.log('First 100 chars of URL:', imageUrl.substring(0, 100));
       setGeneratedImageUrl(imageUrl);
       onImageGenerated(imageUrl);
     } catch (error) {
