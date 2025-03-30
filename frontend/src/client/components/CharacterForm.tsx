@@ -157,12 +157,12 @@ export default function CharacterForm({ onGenerate, setIsGenerating, setError, c
           <button
             type="submit"
             disabled={isLoading || !description.trim() || !relationship.trim() || (url.trim() !== '' && !isUrlValid)}
-            className="btn btn-primary btn-lg relative"
+            className="btn btn-primary btn-lg"
           >
             {isLoading ? (
               <>
-                <LoadingSpinner size="small" className="absolute left-4" />
-                <span className="ml-6">Generating...</span>
+                <LoadingSpinner size="small" />
+                <span className="ml-2">Generating...</span>
               </>
             ) : (
               <>

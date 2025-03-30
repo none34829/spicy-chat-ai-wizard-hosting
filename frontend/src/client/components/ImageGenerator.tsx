@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import LoadingSpinner from './LoadingSpinner';
-import CharacterImage from './CharacterImage';
 import { CharacterData } from '../../types';
 import { fetchFromApi } from '../../utils/api';
 
@@ -177,11 +176,16 @@ export default function ImageGenerator({
       </div>
 
       {generatedImageUrl && (
-        <CharacterImage 
-          imageUrl={generatedImageUrl}
-          characterName={character.name}
-          style={selectedStyle === 'other' ? customStyle : selectedStyle}
-        />
+        <div className="mt-8 p-4 bg-white rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold mb-4">Generated Image</h3>
+          <div className="relative flex justify-center">
+            <img 
+              src={generatedImageUrl} 
+              alt={`${character.name} - ${selectedStyle}`} 
+              className="w-full max-w-md mx-auto rounded-lg shadow-lg"
+            />
+          </div>
+        </div>
       )}
       
       <div className="form-group">
@@ -236,12 +240,12 @@ export default function ImageGenerator({
         <button
           onClick={handleGenerateImage}
           disabled={isLoading || (selectedStyle === 'other' && !customStyle.trim())}
-          className="btn btn-primary btn-lg relative"
+          className="btn btn-primary btn-lg"
         >
           {isLoading ? (
             <>
-              <LoadingSpinner size="small" className="absolute left-4" />
-              <span className="ml-6">Generating Image...</span>
+              <LoadingSpinner size="small" />
+              <span className="ml-2">Generating...</span>
             </>
           ) : (
             <>
