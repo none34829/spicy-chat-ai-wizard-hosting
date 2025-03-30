@@ -34,11 +34,13 @@ export default function ImageGenerator({
   const [customStyle, setCustomStyle] = useState<string>('');
   const [additionalDetails, setAdditionalDetails] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [generatedImageUrl, setGeneratedImageUrl] = useState<string>('');
   
   const handleGenerateImage = async () => {
     setIsLoading(true);
     setIsGenerating(true);
     setError('');
+    setGeneratedImageUrl('');
     
     try {
       const finalStyle = selectedStyle === 'other' ? customStyle : selectedStyle;
@@ -65,6 +67,7 @@ export default function ImageGenerator({
       }
       
       if (result.status === 'success' && result.data && result.data.imageUrl) {
+        setGeneratedImageUrl(result.data.imageUrl);
         onImageGenerated(result.data.imageUrl);
       } else {
         throw new Error('Invalid response format');
@@ -149,6 +152,17 @@ export default function ImageGenerator({
           Select a style and add any specific details you want to include in the image.
         </p>
       </div>
+
+      {generatedImageUrl && (
+        <div className="mt-8 p-4 bg-white rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold mb-4">Generated Image</h3>
+          <img 
+            src={generatedImageUrl} 
+            alt={`${character.name} - ${selectedStyle}`} 
+            className="w-full max-w-md mx-auto rounded-lg shadow-lg"
+          />
+        </div>
+      )}
       
       <div className="form-group">
         <label htmlFor="style">Image Style</label>
@@ -206,15 +220,15 @@ export default function ImageGenerator({
         >
           {isLoading ? (
             <>
-              <LoadingSpinner />
-              <span>Generating Image...</span>
+              <LoadingSpinner size="small" />
+              <span className="ml-2">Generating Image...</span>
             </>
           ) : (
             <>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              Generate Image
+              <span className="ml-2">Generate Image</span>
             </>
           )}
         </button>
