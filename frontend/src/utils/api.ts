@@ -1,5 +1,7 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL 
-  || 'https://spicy-chat-ai-wizard-hosting-production.up.railway.app/api';
+  || (window.location.hostname === 'localhost' 
+    ? 'http://localhost:3001/api' 
+    : 'https://spicy-chat-ai-wizard-hosting-production.up.railway.app/api');
 
 export const fetchFromApi = async (
   endpoint: string, 
