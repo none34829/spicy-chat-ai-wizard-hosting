@@ -30,7 +30,11 @@ export async function generateImage(req: Request, res: Response) {
     
     const { characterData, style = 'realistic portrait' } = validationResult.data;
     
-    const prompt = `${style} of ${characterData.name}, ${characterData.title}. ${characterData.originalDescription}. A detailed, high-quality image showing ${characterData.persona}`;
+    const prompt = `${style} of ${characterData.name}, ${characterData.title}. 
+This character is described as: ${characterData.persona}
+${characterData.originalDescription ? `Original description: ${characterData.originalDescription}` : ''}
+Create a detailed, high-quality image depicting this character with the following style: ${style}.`;
+    
     console.log('Generated prompt:', prompt);
     
     console.log('Calling Runware API with prompt that includes style');

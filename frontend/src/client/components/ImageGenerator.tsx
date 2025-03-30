@@ -54,7 +54,9 @@ export default function ImageGenerator({
           characterData: {
             name: character.name,
             title: character.title,
-            persona: additionalDetails || character.persona,
+            persona: additionalDetails 
+              ? `${character.persona}\n\nAdditional visual details: ${additionalDetails}` 
+              : character.persona,
             originalDescription: character.originalDescription || '',
           },
           style: finalStyle,
