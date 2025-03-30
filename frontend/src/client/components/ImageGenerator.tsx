@@ -62,19 +62,22 @@ export default function ImageGenerator({
         }),
       });
       
-      console.log('Image generation result:', result);
+      console.log('Raw API response:', result);
       
       if (result.status === 'error') {
         throw new Error(result.message || 'Failed to generate image');
       }
       
-      if (result.status === 'success' && result.data && result.data.imageUrl) {
-        console.log('Setting image URL:', result.data.imageUrl);
-        setGeneratedImageUrl(result.data.imageUrl);
-        onImageGenerated(result.data.imageUrl);
+      // Handle both possible response formats
+      const imageUrl = result.data?.imageUrl || result.imageUrl;
+      
+      if (imageUrl) {
+        console.log('Setting image URL:', imageUrl);
+        setGeneratedImageUrl(imageUrl);
+        onImageGenerated(imageUrl);
       } else {
-        console.log('Invalid response format:', result);
-        throw new Error('Invalid response format');
+        console.error('No image URL in response:', result);
+        throw new Error('No image URL in response');
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -160,11 +163,13 @@ export default function ImageGenerator({
       {generatedImageUrl && (
         <div className="mt-8 p-4 bg-white rounded-lg shadow-md">
           <h3 className="text-lg font-semibold mb-4">Generated Image</h3>
-          <div className="relative">
+          <div className="relative flex justify-center">
             <img 
               src={generatedImageUrl} 
               alt={`${character.name} - ${selectedStyle}`} 
-              className="w-full max-w-md mx-auto rounded-lg shadow-lg"
+              className="max-w-full h-auto rounded-lg shadow-lg"
+              style={{ maxHeight: '512px' }}
+              onLoad={() => console.log('Image loaded successfully:', generatedImageUrl)}
               onError={(e) => {
                 console.error('Image failed to load:', generatedImageUrl);
                 const target = e.target as HTMLImageElement;
