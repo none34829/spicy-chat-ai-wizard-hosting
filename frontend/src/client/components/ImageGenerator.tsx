@@ -68,17 +68,15 @@ export default function ImageGenerator({
         throw new Error(result.message || 'Failed to generate image');
       }
       
-      // Handle both possible response formats
-      const imageUrl = result.data?.imageUrl || result.imageUrl;
-      
-      if (imageUrl) {
-        console.log('Setting image URL:', imageUrl);
-        setGeneratedImageUrl(imageUrl);
-        onImageGenerated(imageUrl);
-      } else {
-        console.error('No image URL in response:', result);
+      if (!result.data?.imageUrl) {
+        console.error('Invalid response format:', result);
         throw new Error('No image URL in response');
       }
+
+      const imageUrl = result.data.imageUrl;
+      console.log('Setting image URL:', imageUrl);
+      setGeneratedImageUrl(imageUrl);
+      onImageGenerated(imageUrl);
     } catch (error) {
       if (error instanceof Error) {
         console.error('Frontend error when generating image:', error.message);
@@ -163,20 +161,29 @@ export default function ImageGenerator({
       {generatedImageUrl && (
         <div className="mt-8 p-4 bg-white rounded-lg shadow-md">
           <h3 className="text-lg font-semibold mb-4">Generated Image</h3>
-          <div className="relative flex justify-center">
+          <div className="relative flex justify-center items-center min-h-[200px]">
             <img 
               src={generatedImageUrl} 
               alt={`${character.name} - ${selectedStyle}`} 
               className="max-w-full h-auto rounded-lg shadow-lg"
               style={{ maxHeight: '512px' }}
-              onLoad={() => console.log('Image loaded successfully:', generatedImageUrl)}
+              onLoad={() => {
+                console.log('Image loaded successfully:', generatedImageUrl);
+                setIsLoading(false);
+              }}
               onError={(e) => {
                 console.error('Image failed to load:', generatedImageUrl);
                 const target = e.target as HTMLImageElement;
                 target.onerror = null;
                 target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2YzZjRmNiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5JbWFnZSBmYWlsZWQgdG8gbG9hZDwvdGV4dD48L3N2Zz4=';
+                setIsLoading(false);
               }}
             />
+            {isLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
+                <LoadingSpinner size="large" color="purple" />
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -233,12 +240,12 @@ export default function ImageGenerator({
         <button
           onClick={handleGenerateImage}
           disabled={isLoading || (selectedStyle === 'other' && !customStyle.trim())}
-          className="btn btn-primary btn-lg"
+          className="btn btn-primary btn-lg relative"
         >
           {isLoading ? (
             <>
-              <LoadingSpinner size="small" />
-              <span className="ml-2">Generating Image...</span>
+              <LoadingSpinner size="small" className="absolute left-4" />
+              <span className="ml-6">Generating Image...</span>
             </>
           ) : (
             <>

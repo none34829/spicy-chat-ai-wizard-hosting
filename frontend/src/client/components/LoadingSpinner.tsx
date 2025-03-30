@@ -3,22 +3,33 @@ import React from 'react';
 interface LoadingSpinnerProps {
   size?: 'small' | 'medium' | 'large';
   className?: string;
+  color?: 'white' | 'purple';
 }
 
-export default function LoadingSpinner({ size = 'medium', className = '' }: LoadingSpinnerProps) {
+export default function LoadingSpinner({ 
+  size = 'medium', 
+  className = '',
+  color = 'white'
+}: LoadingSpinnerProps) {
   const sizeClasses = {
     small: 'w-4 h-4',
     medium: 'w-6 h-6',
     large: 'w-8 h-8'
   };
 
+  const colorClasses = {
+    white: 'text-white',
+    purple: 'text-purple-600'
+  };
+
   return (
-    <div className={`inline-block ${className}`}>
+    <div className={`inline-flex items-center justify-center ${className}`}>
       <svg
-        className={`${sizeClasses[size]} animate-spin text-white`}
+        className={`${sizeClasses[size]} ${colorClasses[color]} animate-spin`}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
+        data-testid="loading-spinner"
       >
         <circle
           className="opacity-25"
