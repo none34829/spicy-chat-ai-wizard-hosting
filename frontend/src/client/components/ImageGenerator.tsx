@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import LoadingSpinner from './LoadingSpinner';
+import CharacterImage from './CharacterImage';
 import { CharacterData } from '../../types';
 import { fetchFromApi } from '../../utils/api';
 
@@ -63,6 +64,15 @@ export default function ImageGenerator({
       });
       
       console.log('Raw API response:', result);
+      console.log('Response type:', typeof result);
+      console.log('Response keys:', Object.keys(result));
+      console.log('Result status:', result.status);
+      
+      if (result.data) {
+        console.log('Result data:', result.data);
+        console.log('Result data type:', typeof result.data);
+        console.log('Result data keys:', Object.keys(result.data));
+      }
       
       if (result.status === 'error') {
         throw new Error(result.message || 'Failed to generate image');
@@ -159,33 +169,11 @@ export default function ImageGenerator({
       </div>
 
       {generatedImageUrl && (
-        <div className="mt-8 p-4 bg-white rounded-lg shadow-md">
-          <h3 className="text-lg font-semibold mb-4">Generated Image</h3>
-          <div className="relative flex justify-center items-center min-h-[200px]">
-            <img 
-              src={generatedImageUrl} 
-              alt={`${character.name} - ${selectedStyle}`} 
-              className="max-w-full h-auto rounded-lg shadow-lg"
-              style={{ maxHeight: '512px' }}
-              onLoad={() => {
-                console.log('Image loaded successfully:', generatedImageUrl);
-                setIsLoading(false);
-              }}
-              onError={(e) => {
-                console.error('Image failed to load:', generatedImageUrl);
-                const target = e.target as HTMLImageElement;
-                target.onerror = null;
-                target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2YzZjRmNiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5JbWFnZSBmYWlsZWQgdG8gbG9hZDwvdGV4dD48L3N2Zz4=';
-                setIsLoading(false);
-              }}
-            />
-            {isLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
-                <LoadingSpinner size="large" color="purple" />
-              </div>
-            )}
-          </div>
-        </div>
+        <CharacterImage 
+          imageUrl={generatedImageUrl}
+          characterName={character.name}
+          style={selectedStyle === 'other' ? customStyle : selectedStyle}
+        />
       )}
       
       <div className="form-group">
