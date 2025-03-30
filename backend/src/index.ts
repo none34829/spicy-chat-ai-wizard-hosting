@@ -10,12 +10,12 @@ const PORT = process.env.PORT || 3001;
 
 // CORS configuration
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://hello-spicy-chat.netlify.app'],
-  credentials: false, // Change to false since we're not using credentials
+  origin: ['https://hello-spicy-chat.netlify.app', 'http://localhost:5173'],
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  optionsSuccessStatus: 200
 }));
-
 
 // Parse JSON bodies
 app.use(express.json());

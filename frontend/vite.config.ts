@@ -15,11 +15,16 @@ export default defineConfig({
     open: true,
     proxy: {
       '/api': {
-        target: process.env.VITE_API_URL || 'http://localhost:3001',
+        target: 'https://spicy-chat-ai-wizard-hosting-production.up.railway.app',
         changeOrigin: true,
-        secure: false,
+        secure: true,
         ws: true,
-        rewrite: (path) => path.replace(/^\/api/, '/api')
+        rewrite: (path) => path.replace(/^\/api/, '/api'),
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, req, _res) => {
+            console.error('Proxy error:', err);
+          });
+        }
       }
     }
   },
