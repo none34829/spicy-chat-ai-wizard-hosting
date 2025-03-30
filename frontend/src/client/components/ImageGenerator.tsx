@@ -62,14 +62,18 @@ export default function ImageGenerator({
         }),
       });
       
+      console.log('Image generation result:', result);
+      
       if (result.status === 'error') {
         throw new Error(result.message || 'Failed to generate image');
       }
       
       if (result.status === 'success' && result.data && result.data.imageUrl) {
+        console.log('Setting image URL:', result.data.imageUrl);
         setGeneratedImageUrl(result.data.imageUrl);
         onImageGenerated(result.data.imageUrl);
       } else {
+        console.log('Invalid response format:', result);
         throw new Error('Invalid response format');
       }
     } catch (error) {
@@ -156,11 +160,19 @@ export default function ImageGenerator({
       {generatedImageUrl && (
         <div className="mt-8 p-4 bg-white rounded-lg shadow-md">
           <h3 className="text-lg font-semibold mb-4">Generated Image</h3>
-          <img 
-            src={generatedImageUrl} 
-            alt={`${character.name} - ${selectedStyle}`} 
-            className="w-full max-w-md mx-auto rounded-lg shadow-lg"
-          />
+          <div className="relative">
+            <img 
+              src={generatedImageUrl} 
+              alt={`${character.name} - ${selectedStyle}`} 
+              className="w-full max-w-md mx-auto rounded-lg shadow-lg"
+              onError={(e) => {
+                console.error('Image failed to load:', generatedImageUrl);
+                const target = e.target as HTMLImageElement;
+                target.onerror = null;
+                target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2YzZjRmNiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5Y2EzYWYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5JbWFnZSBmYWlsZWQgdG8gbG9hZDwvdGV4dD48L3N2Zz4=';
+              }}
+            />
+          </div>
         </div>
       )}
       
