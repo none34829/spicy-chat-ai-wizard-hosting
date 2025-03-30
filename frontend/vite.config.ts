@@ -12,21 +12,7 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    open: true,
-    proxy: {
-      '/api': {
-        target: 'https://spicy-chat-ai-wizard-hosting-production.up.railway.app',
-        changeOrigin: true,
-        secure: true,
-        ws: true,
-        rewrite: (path) => path.replace(/^\/api/, '/api'),
-        configure: (proxy, _options) => {
-          proxy.on('error', (err, req, _res) => {
-            console.error('Proxy error:', err);
-          });
-        }
-      }
-    }
+    open: true
   },
   build: {
     outDir: 'dist', 
