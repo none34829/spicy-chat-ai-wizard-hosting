@@ -17,14 +17,9 @@ export default defineConfig({
   build: {
     outDir: 'dist', 
     emptyOutDir: true,
-    rollupOptions: {
-      input: {
-        main: path.resolve(__dirname, 'index.html')
-      }
-    }
   },
   define: {
     'process.env.VITE_API_URL': JSON.stringify('https://spicy-chat-ai-wizard-hosting-production.up.railway.app/api')
   },
-  root: './'
+  publicDir: 'public'
 });
