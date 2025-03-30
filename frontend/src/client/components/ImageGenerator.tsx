@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import LoadingSpinner from './LoadingSpinner';
 import { CharacterData } from '../../types';
 import { fetchFromApi } from '../../utils/api';
 
@@ -243,10 +242,7 @@ export default function ImageGenerator({
           className="btn btn-primary btn-lg"
         >
           {isLoading ? (
-            <>
-              <LoadingSpinner size="small" />
-              <span className="ml-2">Generating...</span>
-            </>
+            <span>Generating Image...</span>
           ) : (
             <>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
