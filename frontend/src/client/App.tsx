@@ -27,11 +27,17 @@ export default function App() {
       }
     }
   }, [activeStep]);
+
+  // Reset isGenerating when changing steps
+  useEffect(() => {
+    setIsGenerating(false);
+  }, [activeStep]);
   
   const handleCharacterGenerated = (data: CharacterData) => {
     setCharacterData(data);
     setActiveStep(2);
     setError('');
+    setIsGenerating(false);
   };
   
   const handleImageGenerated = (url: string) => {
@@ -40,6 +46,7 @@ export default function App() {
     setImageUrl(url);
     setActiveStep(3);
     setError('');
+    setIsGenerating(false);
     
     requestAnimationFrame(() => {
       window.scrollTo({
@@ -60,6 +67,7 @@ export default function App() {
       }
       
       setActiveStep(activeStep - 1);
+      setIsGenerating(false);
       
       requestAnimationFrame(() => {
         window.scrollTo({
@@ -75,6 +83,7 @@ export default function App() {
     setImageUrl('');
     setActiveStep(1);
     setError('');
+    setIsGenerating(false);
   };
   
   const handleExport = () => {
@@ -142,7 +151,11 @@ export default function App() {
           >
             <div 
               className={`step-number ${activeStep === index + 1 ? 'active' : ''}`}
-              onClick={() => setActiveStep(index + 1)}
+              onClick={() => {
+                if (!isGenerating) {
+                  setActiveStep(index + 1);
+                }
+              }}
             >
               {index + 1}
             </div>
@@ -198,90 +211,74 @@ export default function App() {
                 </div>
                 <div className="mb-4">
                   <label htmlFor="preview-greeting" className="font-medium text-gray-700">Greeting</label>
-                  <p id="preview-greeting" className="mt-1 whitespace-pre-wrap">{characterData.greeting}</p>
+                  <p id="preview-greeting" className="mt-1">{characterData.greeting}</p>
+                </div>
+              </div>
+              <div>
+                <div className="mb-4">
+                  <label htmlFor="preview-persona" className="font-medium text-gray-700">Persona</label>
+                  <p id="preview-persona" className="mt-1">{characterData.persona}</p>
                 </div>
                 <div className="mb-4">
-                  <label htmlFor="preview-persona" className="font-medium text-gray-700">Chatbot's Personality</label>
-                  <p id="preview-persona" className="mt-1 whitespace-pre-wrap">{characterData.persona}</p>
+                  <label htmlFor="preview-scenario" className="font-medium text-gray-700">Scenario</label>
+                  <p id="preview-scenario" className="mt-1">{characterData.scenario}</p>
                 </div>
                 <div className="mb-4">
                   <label htmlFor="preview-relationship" className="font-medium text-gray-700">Relationship</label>
                   <p id="preview-relationship" className="mt-1">{characterData.relationship}</p>
                 </div>
-                <div className="mt-4">
-                  <label htmlFor="preview-scenario" className="font-medium text-gray-700">Scenario</label>
-                  <p id="preview-scenario" className="mt-1 whitespace-pre-wrap">{characterData.scenario}</p>
-                </div>
-                <div className="mt-4">
-                  <label htmlFor="preview-conversation" className="font-medium text-gray-700">Example Conversation</label>
-                  <div id="preview-conversation" className="mt-1">
-                    {Array.isArray(characterData.exampleConversation) ? (
-                      characterData.exampleConversation.map((exchange, index) => (
-                        <div key={index} className="conversation-exchange">
-                          <p className="user-message">User: {exchange.user}</p>
-                          <p className="character-message">{characterData.name}: {exchange.character}</p>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-red-500">Conversation format not supported</p>
-                    )}
-                  </div>
-                </div>
               </div>
-              
-              {imageUrl && (
-                <div className="image-preview">
-                  <img src={imageUrl} alt={characterData.name} className="w-full h-auto rounded-lg" />
-                </div>
-              )}
+            </div>
+
+            <div className="mt-8 flex justify-center">
+              <button
+                onClick={handleExport}
+                className="btn btn-primary btn-lg"
+                disabled={isGenerating}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Export Character
+              </button>
             </div>
           </div>
         )}
 
-        <div className="button-group mt-8">
+        <div className="mt-8 flex justify-center space-x-4">
           {activeStep > 1 && (
-            <button onClick={handleBack} className="btn btn-back">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
+            <button
+              onClick={handleBack}
+              className="btn btn-secondary"
+              disabled={isGenerating}
+            >
               Back
             </button>
           )}
-          
           {activeStep === 3 && (
-            <button onClick={handleExport} className="btn btn-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-              Export Character
+            <button
+              onClick={handleReset}
+              className="btn btn-secondary"
+              disabled={isGenerating}
+            >
+              Create New Character
             </button>
           )}
         </div>
       </div>
 
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-        <div className="modal-content">
-          <div className="mb-8">
-            <svg className="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-            <h3 className="mt-3 text-lg font-medium text-gray-900">
-              Success!
-            </h3>
-            <div className="mt-2 text-sm text-gray-600">
-              <p>
-                Your character has been exported to SpicyChat. You can now complete the character creation process there.
-              </p>
-            </div>
-          </div>
-          <div className="mt-6">
-            <button
-              onClick={() => setShowModal(false)}
-              className="btn btn-success"
-            >
-              Close
-            </button>
-          </div>
+        <div className="p-6">
+          <h3 className="text-xl font-semibold text-purple-600 mb-4">Success!</h3>
+          <p className="text-gray-700 mb-6">
+            Your character has been exported to SpicyChat. You can now complete the character creation process there.
+          </p>
+          <button
+            onClick={() => setShowModal(false)}
+            className="btn btn-primary w-full"
+          >
+            Close
+          </button>
         </div>
       </Modal>
     </div>
