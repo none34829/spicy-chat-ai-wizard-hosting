@@ -203,6 +203,15 @@ input, textarea, select {
   border-radius: 12px !important;
   transition: all 0.2s ease !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+  margin: 0 auto !important;
+  text-align: left !important;
+}
+
+textarea {
+  resize: vertical !important;
+  min-height: 100px !important;
+  max-width: 100% !important;
+  margin: 0 auto !important;
 }
 
 input:hover, textarea:hover, select:hover {
@@ -234,6 +243,17 @@ label {
 
 .form-group {
   margin-bottom: 1.5rem !important;
+  text-align: center !important;
+  max-width: 800px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.form-group label, 
+.form-group .help-text {
+  text-align: left !important;
+  display: block !important;
+  width: 100% !important;
 }
 
 select {

@@ -88,12 +88,12 @@ export default function App() {
           .join('\n\n')
       : characterData.exampleConversation;
     
-    // character card data
+    // character card data with renamed fields for export
     const characterCard = {
       name: characterData.name,
       title: characterData.title,
-      greeting: characterData.greeting,
-      chatbot_personality: characterData.persona,
+      first_mes: characterData.greeting,  // renamed from greeting
+      description: characterData.persona,  // renamed from chatbot_personality
       scenario: characterData.scenario,
       relationship: characterData.relationship,
       example_dialogue: formattedDialogue,
